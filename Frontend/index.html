@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Emergency AI Assistant</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+body {
+    margin: 0;
+    background: linear-gradient(135deg, #ff4d4d, #ff6b6b, #ff8787);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.container {
+    width: 95%;
+    max-width: 420px;
+}
+
+.header {
+    text-align: center;
+    color: white;
+    font-size: 26px;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.card {
+    background: rgba(255,255,255,0.25);
+    backdrop-filter: blur(14px);
+    border-radius: 18px;
+    padding: 20px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+textarea {
+    width: 100%;
+    padding: 14px;
+    border-radius: 12px;
+    border: none;
+    font-size: 16px;
+    resize: none;
+    outline: none;
+}
+
+button {
+    width: 100%;
+    margin-top: 15px;
+    padding: 15px;
+    border: none;
+    border-radius: 12px;
+    background: #e63946;
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+button:hover {
+    transform: scale(1.03);
+    background: #c1121f;
+}
+
+.result {
+    margin-top: 20px;
+    background: white;
+    border-radius: 14px;
+    padding: 16px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.12);
+    white-space: pre-wrap;
+    line-height: 1.5;
+    font-size: 15px;
+}
+
+.footer {
+    text-align: center;
+    margin-top: 12px;
+    color: white;
+    font-size: 13px;
+    opacity: 0.9;
+}
+
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<div class="header">
+ Emergency Assistant
+</div>
+
+<div class="card">
+
+<textarea id="input" rows="4" placeholder="Describe emergency..."></textarea>
+
+<button onclick="send()">Analyze Emergency</button>
+
+<div class="result" id="result">
+AI guidance will appear here...
+</div>
+
+</div>
+
+<div class="footer">
+Stay Calm - Act Fast - Save Lives
+</div>
+
+</div>
+
+<script>
+async function send() {
+
+    let text = document.getElementById("input").value;
+
+    if(text.trim() === ""){
+        alert("Please describe the emergency");
+        return;
+    }
+
+    document.getElementById("result").innerText = "Analyzing emergency...";
+
+    const response = await fetch("http://127.0.0.1:8000/analyze", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({ text: text })
+    });
+
+    const data = await response.json();
+
+    document.getElementById("result").innerText = data.result;
+}
+</script>
+
+</body>
+</html>
