@@ -45,7 +45,7 @@ JavaScript
 
 📦 Installation
 1️⃣ Clone the repo
-git clone https://github.com/YOUR_USERNAME/emergency-ai-assistant.git
+git clone (https://github.com/Abhi-tech-geek/emergency-ai-assistant)
 cd emergency-ai-assistant
 
 2️⃣ Create virtual environment
