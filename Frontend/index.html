@@ -1,143 +1,277 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Emergency AI Assistant</title>
+<title>Emergency AI</title>
 
 <style>
 
-* {
-    box-sizing: border-box;
-    font-family: 'Segoe UI', sans-serif;
+/* ================= BACKGROUND ================= */
+
+body{
+  margin:0;
+  height:100vh;
+  font-family:Segoe UI, sans-serif;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  color:white;
+  overflow:hidden;
+
+  /* brighter color shifting */
+  background: linear-gradient(270deg,
+  #020617,
+  #0f172a,
+  #001f3f,
+  #0a2540,
+  #001a33,
+  #020617);
+
+  background-size:700% 700%;
+  animation:gradientMove 14s ease infinite;
 }
 
-body {
-    margin: 0;
-    background: linear-gradient(135deg, #ff4d4d, #ff6b6b, #ff8787);
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+@keyframes gradientMove{
+  0%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+  100%{background-position:0% 50%}
 }
 
-.container {
-    width: 95%;
-    max-width: 420px;
+/* glow lights */
+
+body::before{
+  content:"";
+  position:absolute;
+  width:500px;
+  height:500px;
+  background:#22c55e;
+  filter:blur(180px);
+  opacity:.12;
+  top:-120px;
+  left:-120px;
 }
 
-.header {
-    text-align: center;
-    color: white;
-    font-size: 26px;
-    font-weight: bold;
-    margin-bottom: 15px;
+body::after{
+  content:"";
+  position:absolute;
+  width:500px;
+  height:500px;
+  background:#3b82f6;
+  filter:blur(180px);
+  opacity:.12;
+  bottom:-120px;
+  right:-120px;
 }
 
-.card {
-    background: rgba(255,255,255,0.25);
-    backdrop-filter: blur(14px);
-    border-radius: 18px;
-    padding: 20px;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+/* ================= ECG BOTTOM ================= */
+
+.ecg-wrapper{
+  position:absolute;
+  bottom:0;
+  left:0;
+  width:200%;
+  height:90px;
+  overflow:hidden;
+  opacity:.8;
 }
 
-textarea {
-    width: 100%;
-    padding: 14px;
-    border-radius: 12px;
-    border: none;
-    font-size: 16px;
-    resize: none;
-    outline: none;
+.ecg-line{
+  width:200%;
+  height:90px;
+  animation:moveECG 5s linear infinite; /* slower */
 }
 
-button {
-    width: 100%;
-    margin-top: 15px;
-    padding: 15px;
-    border: none;
-    border-radius: 12px;
-    background: #e63946;
-    color: white;
-    font-size: 18px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: 0.2s;
+.ecg-line svg{
+  width:100%;
+  height:100%;
 }
 
-button:hover {
-    transform: scale(1.03);
-    background: #c1121f;
+@keyframes moveECG{
+  from{transform:translateX(0)}
+  to{transform:translateX(-50%)}
 }
 
-.result {
-    margin-top: 20px;
-    background: white;
-    border-radius: 14px;
-    padding: 16px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.12);
-    white-space: pre-wrap;
-    line-height: 1.5;
-    font-size: 15px;
+.ecg-line path{
+  stroke:#22c55e;
+  stroke-width:3;
+  fill:none;
+  filter: drop-shadow(0 0 8px #22c55e);
 }
 
-.footer {
-    text-align: center;
-    margin-top: 12px;
-    color: white;
-    font-size: 13px;
-    opacity: 0.9;
+/* heartbeat glow */
+
+@keyframes beat{
+  0%,100%{filter: drop-shadow(0 0 6px #22c55e);}
+  50%{filter: drop-shadow(0 0 20px #22c55e);}
+}
+
+.ecg-line path{
+  animation:beat 1.2s infinite;
+}
+
+/* ================= CARD ================= */
+
+.container{
+  position:relative;
+  backdrop-filter: blur(25px);
+  background: rgba(15,23,42,0.75);
+  padding:40px 30px;
+  border-radius:26px;
+  text-align:center;
+  width:360px;
+  box-shadow:0 0 60px rgba(0,0,0,0.7);
+  z-index:2;
+}
+
+h1{
+  margin:10px 0 5px;
+  font-size:28px;
+}
+
+.subtitle{
+  opacity:.7;
+  margin-bottom:18px;
+}
+
+textarea{
+  width:100%;
+  height:90px;
+  border:none;
+  border-radius:12px;
+  padding:12px;
+  resize:none;
+  outline:none;
+  margin-bottom:15px;
+  background:rgba(255,255,255,.08);
+  color:white;
+}
+
+button{
+  width:100%;
+  padding:14px;
+  border:none;
+  border-radius:12px;
+  font-size:16px;
+  cursor:pointer;
+  margin-top:10px;
+  transition:.25s;
+}
+
+.analyze{
+  background:linear-gradient(90deg,#06b6d4,#3b82f6);
+  box-shadow:0 6px 25px rgba(59,130,246,.4);
+}
+.analyze:hover{transform:scale(1.05)}
+
+.call{
+  background:linear-gradient(90deg,#22c55e,#16a34a);
+  animation:pulse 1.5s infinite;
+}
+
+@keyframes pulse{
+  0%,100%{box-shadow:0 0 10px rgba(34,197,94,.4);}
+  50%{box-shadow:0 0 30px rgba(34,197,94,1);}
+}
+
+.result{
+  margin-top:18px;
+  text-align:left;
+  font-size:14px;
+  line-height:1.6;
+}
+
+/* captions */
+
+.top-caption{
+  position:absolute;
+  top:30px;
+  opacity:.45;
+}
+
+.left-caption{
+  position:absolute;
+  left:40px;
+  top:50%;
+  transform:translateY(-50%);
+  opacity:.25;
+}
+
+.right-caption{
+  position:absolute;
+  right:40px;
+  top:50%;
+  transform:translateY(-50%);
+  opacity:.25;
+}
+
+.bottom-caption{
+  position:absolute;
+  bottom:110px;
+  opacity:.35;
+}
+
+@media(max-width:768px){
+  .left-caption,.right-caption{display:none}
 }
 
 </style>
 </head>
 <body>
 
+<div class="top-caption">
+  Smart first aid guidance when every second counts
+</div>
+
+<div class="left-caption">
+  Stay alert.<br>Stay prepared.<br>Save lives.
+</div>
+
+<div class="right-caption">
+  Every second matters.<br>Stay calm.<br>Act fast.
+</div>
+
 <div class="container">
+  <h1>Emergency AI</h1>
+  <div class="subtitle">Instant medical guidance</div>
 
-<div class="header">
- Emergency Assistant
+  <textarea id="text" placeholder="Describe the emergency..."></textarea>
+
+  <button class="analyze" onclick="analyze()">Analyze Emergency</button>
+  <button class="call" onclick="callEmergency()">Call Emergency</button>
+
+  <div id="result" class="result"></div>
 </div>
 
-<div class="card">
-
-<textarea id="input" rows="4" placeholder="Describe emergency..."></textarea>
-
-<button onclick="send()">Analyze Emergency</button>
-
-<div class="result" id="result">
-AI guidance will appear here...
+<div class="bottom-caption">
+  Help saves lives • First aid matters • Stay calm
 </div>
 
-</div>
-
-<div class="footer">
-Stay Calm - Act Fast - Save Lives
-</div>
-
+<!-- ECG BOTTOM -->
+<div class="ecg-wrapper">
+  <div class="ecg-line">
+    <svg viewBox="0 0 1000 100">
+      <path d="M0 60 L80 60 L100 20 L120 90 L140 60 L220 60 L240 40 L260 60 L340 60 L360 25 L380 95 L400 60 L480 60 L500 20 L520 90 L540 60 L620 60 L640 40 L660 60 L740 60 L760 25 L780 95 L800 60 L880 60 L900 40 L920 60 L1000 60"/>
+    </svg>
+  </div>
 </div>
 
 <script>
-async function send() {
+async function analyze(){
+  const text=document.getElementById("text").value;
 
-    let text = document.getElementById("input").value;
+  const res=await fetch("http://127.0.0.1:8000/analyze",{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({text})
+  });
 
-    if(text.trim() === ""){
-        alert("Please describe the emergency");
-        return;
-    }
+  const data=await res.json();
+  document.getElementById("result").innerText=data.result;
+}
 
-    document.getElementById("result").innerText = "Analyzing emergency...";
-
-    const response = await fetch("http://127.0.0.1:8000/analyze", {
-        method: "POST",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({ text: text })
-    });
-
-    const data = await response.json();
-
-    document.getElementById("result").innerText = data.result;
+function callEmergency(){
+  window.location.href="tel:112";
 }
 </script>
 
